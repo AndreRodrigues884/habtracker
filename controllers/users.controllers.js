@@ -9,24 +9,22 @@ const register = async (req, res) => {
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).json({ message: 'Nome, email e senha são obrigatórios.' });
+            return res.error('REGISTER_MISSING_FIELDS');
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Email inválido.' });
+            return res.error('REGISTER_INVALID_EMAIL');
         }
 
         const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
         if (!pwdRegex.test(password)) {
-            return res.status(400).json({
-                message: 'Senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.'
-            });
+            return res.error('REGISTER_INVALID_PASSWORD');
         }
 
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
-            return res.status(409).json({ message: 'Email já está em uso.' });
+            return res.error('REGISTER_DUPLICATE_EMAIL');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -43,7 +41,7 @@ const register = async (req, res) => {
         res.status(201).json({ message: 'Utilizador registado com sucesso!' });
     } catch (error) {
         console.error('Erro no registro:', error);
-        res.status(500).json({ message: 'Erro no servidor ao registrar utilizador.' });
+        return res.error('REGISTER_SERVER_ERROR');
     }
 };
 
@@ -51,7 +49,7 @@ const login = async (req, res) => {
   const { identifier, password } = req.body;
 
   if (!identifier || !password) {
-    return res.status(400).json({ message: "Identifier e senha são obrigatórios." });
+    return res.error('LOGIN_MISSING_FIELDS');
   }
 
   try {
@@ -63,17 +61,17 @@ const login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(401).json({ message: "Utilizador não registado." });
+      return res.error('LOGIN_USER_NOT_FOUND');
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).json({ message: "Dados inválidos." });
+      return res.error('LOGIN_INVALID_CREDENTIALS');
     }
 
     const payload = { userId: user._id, type: user.type };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_SECRET_EXPIRES_IN,
     });
 
     return res.status(200).json({
@@ -82,11 +80,29 @@ const login = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Erro interno no login." });
+    return res.error('LOGIN_SERVER_ERROR');
   }
 };
 
+
+const getUserHabits = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).populate('associatedhabits');
+
+    if (!user) {
+      return res.error('USER_NOT_FOUND');
+    }
+
+    return res.status(200).json({ habits: user.associatedhabits });
+  } catch (err) {
+    console.error(err);
+    return res.error('USER_GET_HABITS_FAILED');
+  }
+};
+
+
 module.exports = {
     login,
-    register
+    register,
+    getUserHabits
 };

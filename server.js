@@ -11,7 +11,7 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('✅ MongoDB conectado com sucesso');
 
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor a correr na porta http://localhost/habtracker:${PORT}`);
+      console.log(`🚀 Servidor a correr na porta http://localhost:${PORT}`);
     });
   })
   .catch((err) => {

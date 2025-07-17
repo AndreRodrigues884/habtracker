@@ -1,14 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const errorResponse = require('./utils/errorResponse');
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(errorResponse);
 
 // Rotas
-app.use('/habits', require('./routes/habit.routes'));
-app.use('/users', require('./routes/users.routes'));
+app.use('/habtracker/habits', require('./routes/habit.routes'));
+app.use('/habtracker/users', require('./routes/users.routes'));
 
 // Middleware para erros
 app.use((err, req, res, next) => {
