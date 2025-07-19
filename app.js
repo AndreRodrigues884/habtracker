@@ -11,6 +11,7 @@ app.use(errorResponse);
 // Rotas
 app.use('/habtracker/habits', require('./routes/habit.routes'));
 app.use('/habtracker/users', require('./routes/users.routes'));
+app.use('/habtracker/admin', require('./routes/admin.routes'));
 
 // Middleware para erros
 app.use((err, req, res, next) => {

@@ -3,16 +3,6 @@ const User = require('../models/User');
 const { FrequencyEnum } = require('../enums/habit.enum');
 
 
-const getHabits = async (req, res) => {
-  try {
-    const habits = await Habit.find().sort({ createdAt: -1 }).populate('userId', 'name email');
-    return res.status(200).json({ habits });
-  } catch (error) {
-    console.error(error);
-    return res.error('GET_HABITS_FAILED');
-  }
-};
-
 
 const createHabit = async (req, res) => {
   const {
@@ -64,16 +54,69 @@ const createHabit = async (req, res) => {
   }
 };
 
-// Fazer update & delete habit do habito associado ao utilizador
+const deleteHabit = async (req, res) => {
+  const { habitId } = req.params;
 
-/* 
-Create	❌ Não	O hábito ainda não existe. És tu quem está a criar e a associar o teu userId ao novo hábito.
-Update	✅ Sim	Precisas confirmar se és o dono do hábito que estás a tentar alterar.
-Delete	✅ Sim	Precisas confirmar se és o dono do hábito que estás a tentar apagar. */
+  try {
+    const habit = await Habit.findById(habitId);
+
+    if (!habit) {
+      return res.error('HABIT_NOT_FOUND');
+    }
+
+    // Verifica se o hábito pertence ao utilizador autenticado
+    if (habit.userId.toString() !== req.user.userId) {
+      return res.error('USER_UNAUTHORIZED_ACTION');
+    }
+
+    await Habit.findByIdAndDelete(habitId);
+
+    // Remove habitId de associatedhabits do user
+    await User.findByIdAndUpdate(req.user.userId, {
+      $pull: { associatedhabits: habitId }
+    });
+
+    return res.status(200).json({ message: 'Hábito eliminado com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    return res.error('HABIT_DELETE_FAILED');
+  }
+};
+
+const updateHabit = async (req, res) => {
+  const { habitId } = req.params;
+  const updates = req.body;
+
+  try {
+    const habit = await Habit.findById(habitId);
+
+    if (!habit) {
+      return res.error('HABIT_NOT_FOUND');
+    }
+
+    if (habit.userId.toString() !== req.user.userId) {
+      return res.error('USER_UNAUTHORIZED_ACTION');
+    }
+
+    // Atualiza campos permitidos
+    Object.keys(updates).forEach(key => {
+      habit[key] = updates[key];
+    });
+
+    habit.updatedAt = new Date();
+    await habit.save();
+
+    return res.status(200).json({ message: 'Hábito atualizado com sucesso.', habit });
+  } catch (error) {
+    console.error(error);
+    return res.error('HABIT_UPDATE_FAILED');
+  }
+};
 
 
 module.exports = {
     createHabit,
-    getHabits,
+    deleteHabit,
+    updateHabit
 };
 

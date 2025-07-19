@@ -18,7 +18,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
+    type: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
     avatar: {
         type: String,
         default: null,
@@ -33,7 +37,7 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-     associatedhabits: [{
+    associatedhabits: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Habit'
     }],

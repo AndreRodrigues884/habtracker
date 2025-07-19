@@ -47,6 +47,10 @@ const errorHandler = {
         status: 500,
         message: 'Erro ao obter hábitos do utilizador.'
     },
+    USER_UNAUTHORIZED_ACTION: {
+        status: 403,
+        message: 'Utilizador não autorizado a realizar esta ação.'
+    },
 
 
     //Habit Management Errors
@@ -70,6 +74,18 @@ const errorHandler = {
         status: 500,
         message: 'Erro ao buscar hábitos.'
     },
+    HABIT_NOT_FOUND: {
+        status: 404,
+        message: 'Hábito não encontrado.'
+    },
+    HABIT_DELETE_FAILED: {
+        status: 500,
+        message: 'Erro ao eliminar o hábito.'
+    },
+    HABIT_UPDATE_FAILED: {
+        status: 500,
+        message: 'Erro ao atualizar hábito.'
+    },
 
 
 
@@ -81,6 +97,17 @@ const errorHandler = {
     AUTH_TOKEN_INVALID: {
         message: 'Token inválido ou expirado.',
         status: 401,
+    },
+
+    
+    //Admin Errors
+     NOT_AUTHORIZED_ADMIN: {
+        status: 403,
+        message: 'Apenas administradores têm permissão para aceder a esta rota.'
+    },
+    GET_USERS_FAILED: {
+        status: 500,
+        message: 'Erro ao obter lista de utilizadores.',
     },
 };
 
