@@ -1,6 +1,48 @@
 const User = require('../models/User');
 const Habit = require('../models/Habit');
+const Achievements = require('../models/Achievements');
+const { AchievementNameEnum } = require('../enums/achievement.enum');
 require('dotenv').config();
+
+/* const createAdmin = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Nome, email e senha são obrigatórios.' });
+    }
+
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email já está em uso.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newAdmin = new User({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      type: 'admin' // define como administrador
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({
+      message: 'Admin criado com sucesso!',
+      user: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        type: newAdmin.type,
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao criar admin.' });
+  }
+}; */
 
 const getUsers = async (req, res) => {
   try {
@@ -22,8 +64,50 @@ const getHabits = async (req, res) => {
   }
 };
 
+const createAchievement = async (req, res) => {
+  try {
+    const { name, type, threshold, icon } = req.body;
+
+    if (!name || !type || !threshold) {
+       return res.error('ACHIEVEMENT_MISSING_FIELDS');
+    }
+
+    const allowedTypes = ['xp', 'streak', 'count'];
+    if (!allowedTypes.includes(type)) {
+      return res.error('ACHIEVEMENT_INVALID_TYPE');
+    }
+
+    const existing = await Achievements.findOne({ name });
+    if (existing) {
+       return res.error('ACHIEVEMENT_ALREADY_EXISTS');
+    }
+
+    if (!AchievementNameEnum[type].includes(name)) {
+       return res.error('ACHIEVEMENT_INVALID_NAME_FOR_TYPE');
+    }
+
+    const achievement = new Achievements({
+      name,
+      type,
+      threshold,
+      icon
+    });
+
+    await achievement.save();
+
+    return res.status(201).json({ message: 'Conquista criada com sucesso!', achievement });
+
+  } catch (err) {
+    console.error(err);
+     return res.error('ACHIEVEMENT_CREATION_FAILED');
+  }
+};
+
+
 
 module.exports = {
+  /* createAdmin, */
   getUsers,
-  getHabits
+  getHabits,
+  createAchievement
 };

@@ -51,6 +51,22 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    achievementsUnlocked: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Achievement',
+    }],
+    habitsCompletedCount: {
+        type: Number,
+        default: 0, // usado para achievements do tipo "count"
+    },
+    lastLoginXpReward: {
+        type: Date,
+        default: null,
+    },
+    lastHabitCompletionDate: {
+        type: Date,
+        default: 0,
+    },
 
     createdAt: {
         type: Date,

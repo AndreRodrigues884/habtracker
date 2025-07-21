@@ -1,5 +1,4 @@
 const errorHandler = {
-
     // Login and Registration Errors
     LOGIN_MISSING_FIELDS: {
         message: 'Email ou password em falta.',
@@ -51,7 +50,10 @@ const errorHandler = {
         status: 403,
         message: 'Utilizador não autorizado a realizar esta ação.'
     },
-
+    GRANT_DAILY_XP_FAILED: {
+        status: 500,
+        message: 'Erro ao atribuir XP diário.',
+    },
 
     //Habit Management Errors
     HABIT_CREATION_FAILED: {
@@ -87,7 +89,27 @@ const errorHandler = {
         message: 'Erro ao atualizar hábito.'
     },
 
-
+    //Achievement Management Errors
+    ACHIEVEMENT_MISSING_FIELDS: {
+        status: 400,
+        message: 'Todos os campos obrigatórios devem ser preenchidos.',
+    },
+    ACHIEVEMENT_INVALID_TYPE: {
+        status: 400,
+        message: 'Tipo de conquista inválido.',
+    },
+    ACHIEVEMENT_ALREADY_EXISTS: {
+        status: 409,
+        message: 'Já existe uma conquista com esse nome.',
+    },
+    ACHIEVEMENT_INVALID_NAME_FOR_TYPE: {
+        status: 400,
+        message: 'Nome de achievement inválido para o tipo selecionado.',
+    },
+    ACHIEVEMENT_CREATION_FAILED: {
+        status: 500,
+        message: 'Erro ao criar conquista.',
+    },
 
     //Token Errors
     AUTH_TOKEN_MISSING: {
@@ -99,9 +121,8 @@ const errorHandler = {
         status: 401,
     },
 
-    
     //Admin Errors
-     NOT_AUTHORIZED_ADMIN: {
+    NOT_AUTHORIZED_ADMIN: {
         status: 403,
         message: 'Apenas administradores têm permissão para aceder a esta rota.'
     },
