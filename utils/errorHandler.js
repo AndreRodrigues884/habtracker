@@ -90,6 +90,14 @@ const errorHandler = {
     },
 
     //Achievement Management Errors
+    FETCH_ACHIEVEMENTS_FAILED: {
+        status: 500,
+        message: 'Erro ao buscar conquistas.'
+    },
+    ACHIEVEMENT_INVALID_TYPE: {
+        status: 400,    
+        message: 'Tipo de conquista inválido.'
+    },
     ACHIEVEMENT_MISSING_FIELDS: {
         status: 400,
         message: 'Todos os campos obrigatórios devem ser preenchidos.',
@@ -104,7 +112,7 @@ const errorHandler = {
     },
     ACHIEVEMENT_INVALID_NAME_FOR_TYPE: {
         status: 400,
-        message: 'Nome de achievement inválido para o tipo selecionado.',
+        message: 'Nome de conquista inválido para o tipo selecionado.',
     },
     ACHIEVEMENT_CREATION_FAILED: {
         status: 500,

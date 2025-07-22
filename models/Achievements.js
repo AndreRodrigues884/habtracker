@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { AllAchievementNames  } = require('../enums/achievement.enum');
+const { AllAchievementNames } = require('../enums/achievement.enum');
 
 const AchievementSchema = new mongoose.Schema({
     name: {
@@ -16,6 +16,10 @@ const AchievementSchema = new mongoose.Schema({
     threshold: {
         type: Number,
         required: true,
+    },
+    rewardXp: {
+        type: Number,
+        default: 0 // XP a conceder quando desbloqueado
     },
     icon: {
         type: String,

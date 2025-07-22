@@ -1,11 +1,9 @@
-//Logica para criar Premios
-
 const express = require('express');
 const router = express.Router();
-const achievementsController = require('../controllers/achievement.controllers');
+const achievementController = require('../controllers/achievement.controllers');
 const auth = require('../middlewares/auth');
 
-
-
+router.get('/', auth, achievementController.getAchievements);
+router.get('/:type', auth, achievementController.getAchievementByType);
 
 module.exports = router;

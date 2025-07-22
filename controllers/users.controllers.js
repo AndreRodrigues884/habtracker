@@ -70,7 +70,6 @@ require('dotenv').config();
         return res.error('LOGIN_INVALID_CREDENTIALS');
       }
 
-      const grantedXp = await grantDailyLoginXp(user);
 
       const payload = { userId: user._id, type: user.type };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
