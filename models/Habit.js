@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { FrequencyEnum } = require('../enums/habit.enum');
+const { FrequencyEnum, CategoryEnum } = require('../enums/habit.enum');
 
 const HabitSchema = new mongoose.Schema({
   userId: {
@@ -18,7 +18,11 @@ const HabitSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-
+  category: {
+    type: String,
+    enum: CategoryEnum,
+    required: true,
+  },
   frequency: {
     type: String,
     enum: FrequencyEnum,
