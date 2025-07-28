@@ -37,4 +37,8 @@ coverage/
 # Pasta temporária do nodemon
 nodemon-debug.log
 
+# Ignorar arquivos admin
+admin.controllers.js
+admin.routes.js
+
 # Outros arquivos temporários ou sensíveis que você não quer versionar

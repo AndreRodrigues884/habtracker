@@ -1,6 +1,9 @@
 const User = require('../models/User');
+const Habit = require('../models/Habit');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { grantXpAndCheckLevelUp, checkAndUnlockAchievements } = require('../services/achievement.services');
+const { updateHabitAndUserProgress } = require('../services/userProgress.services');
 const { grantDailyLoginXp } = require('../services/userXp.services');
 require('dotenv').config();
 
@@ -115,7 +118,52 @@ require('dotenv').config();
     }
   };
 
-  /* controller para desbloquear um achievement */
+
+const completeHabit = async (req, res) => {
+  const { habitId } = req.params;
+  const userId = req.user.userId;
+
+  try {
+    const habit = await Habit.findById(habitId);
+    const user = await User.findById(userId);
+
+    if (!habit || habit.userId.toString() !== userId) {
+      return res.error('HABIT_NOT_FOUND');
+    }
+
+    const today = new Date();
+    const last = habit.lastCompletionDate ? new Date(habit.lastCompletionDate) : null;
+
+    // Já foi concluído hoje?
+    if (last && last.toDateString() === today.toDateString()) {
+      return res.error('HABIT_ALREADY_COMPLETED_TODAY');
+    }
+
+  // update streak e progresso do user
+   updateHabitAndUserProgress(habit, user, today);
+
+    // Ganha XP e verifica se subiu de nível
+    const xpGain = 10;
+    const { xpGranted, newLevel } = await grantXpAndCheckLevelUp(user, xpGain);
+
+    // Verifica conquistas desbloqueadas (com base em streaks, XP e contagens)
+    const unlockedAchievements = await checkAndUnlockAchievements(user, habit);
+
+    await habit.save();
+
+    return res.status(200).json({
+      message: 'Hábito marcado como feito!',
+      habit,
+      xpGained: xpGranted,
+      newLevel,
+      unlockedAchievements,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.error('HABIT_COMPLETION_FAILED');
+  }
+};
+
 
 
 
@@ -123,4 +171,5 @@ require('dotenv').config();
     login,
     register,
     getUserHabits,
+    completeHabit
   };

@@ -68,6 +68,10 @@ const errorHandler = {
         message: 'Frequência inválida.',
         status: 400
     },
+     HABIT_INVALID_CATEGORY: {
+        status: 400,
+        message: 'Categoria inválida.'
+    },
     HABIT_TITLE_ALREADY_EXISTS: {
         message: 'Já existe um hábito com este título.',
         status: 409
@@ -87,6 +91,14 @@ const errorHandler = {
     HABIT_UPDATE_FAILED: {
         status: 500,
         message: 'Erro ao atualizar hábito.'
+    },
+    HABIT_ALREADY_COMPLETED_TODAY: {
+        status: 400,
+        message: 'Hábito já foi concluído hoje.'
+    },
+    HABIT_COMPLETION_FAILED: {
+        status: 500,
+        message: 'Erro ao marcar hábito como concluído.'
     },
 
     //Achievement Management Errors

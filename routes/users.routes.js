@@ -7,7 +7,8 @@ const auth = require('../middlewares/auth');
 router.post('/register', usersController.register);
 router.post('/login', usersController.login);
 router.get('/habits', auth, usersController.getUserHabits);
-/* rota para desbloquear um achievement */
+router.post('/habits/:habitId/complete', auth, usersController.completeHabit);
+
 
 
 module.exports = router;

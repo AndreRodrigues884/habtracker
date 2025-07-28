@@ -1,6 +1,6 @@
 const Habit = require('../models/Habit');
 const User = require('../models/User');
-const { FrequencyEnum } = require('../enums/habit.enum');
+const { FrequencyEnum, CategoryEnum } = require('../enums/habit.enum');
 
 
 
@@ -8,18 +8,23 @@ const createHabit = async (req, res) => {
   const {
     title,
     description = '',
+    category,
     frequency,
     startDate = new Date(),
     intention = null,
     trigger = null,
   } = req.body;
 
-  if (!title || !frequency) {
+  if (!title || !frequency || !category) {
     return res.error('HABIT_MISSING_FIELDS');
   }
 
    if (!FrequencyEnum.includes(frequency)) {
     return res.error('HABIT_INVALID_FREQUENCY');
+  }
+
+   if (!CategoryEnum.includes(category)) {
+    return res.error('HABIT_INVALID_CATEGORY');
   }
 
   const habitExists = await Habit.findOne({ userId: req.user.userId, title });
@@ -32,6 +37,7 @@ const createHabit = async (req, res) => {
       userId: req.user.userId,
       title,
       description,
+      category,
       frequency,
       startDate,
       intention,

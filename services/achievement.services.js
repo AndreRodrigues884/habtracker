@@ -57,7 +57,7 @@ const checkAndUnlockAchievements = async (user, habit = null) => {
         user.achievementsUnlocked.push(achievement._id);
 
         // Aplica recompensa de XP via função centralizada
-        const xpReward = achievement.rewardXp || Math.floor(achievement.threshold * 2);
+        const xpReward = achievement.rewardXp || Math.floor(achievement.threshold * 1.5);
         await grantXpAndCheckLevelUp(user, xpReward);
 
         newlyUnlocked.push({
@@ -75,7 +75,7 @@ const checkAndUnlockAchievements = async (user, habit = null) => {
 };
 
 
-module.exports = { checkAndUnlockAchievements };
+module.exports = { checkAndUnlockAchievements, grantXpAndCheckLevelUp };
 
 /* 1. calculateLevelFromXpThreshold(threshold)
 O que faz:
