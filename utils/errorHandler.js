@@ -54,6 +54,10 @@ const errorHandler = {
         status: 500,
         message: 'Erro ao atribuir XP diário.',
     },
+    USER_DELETE_FAILED: {
+        status: 500,
+        message: 'Erro ao eliminar utilizador.',
+    },
 
     //Habit Management Errors
     HABIT_CREATION_FAILED: {
@@ -114,10 +118,6 @@ const errorHandler = {
         status: 400,
         message: 'Todos os campos obrigatórios devem ser preenchidos.',
     },
-    ACHIEVEMENT_INVALID_TYPE: {
-        status: 400,
-        message: 'Tipo de conquista inválido.',
-    },
     ACHIEVEMENT_ALREADY_EXISTS: {
         status: 409,
         message: 'Já existe uma conquista com esse nome.',
@@ -130,6 +130,18 @@ const errorHandler = {
         status: 500,
         message: 'Erro ao criar conquista.',
     },
+    ACHIEVEMENT_NOT_FOUND: {
+        status: 404,
+        message: 'Conquista não encontrada.',
+    },
+    ACHIEVEMENT_UPDATE_FAILED: {
+        status: 500,
+        message: 'Erro ao atualizar conquista.',
+    },
+    ACHIEVEMENT_DELETE_FAILED: {
+        status: 500,
+        message: 'Erro ao apagar conquista.',
+    },  
 
     //Token Errors
     AUTH_TOKEN_MISSING: {
