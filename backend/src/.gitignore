@@ -1,4 +1,40 @@
-node_modules/
-dist/
-build/
+# Dependências instaladas
+/node_modules
+
+# Arquivo de variáveis de ambiente
 .env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Diretórios de build / produção
+/dist
+/build
+
+# Pasta temporária do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de lock (às vezes é desejável versionar, mas em alguns projetos não)
+package-lock.json
+yarn.lock
+
+# IDEs e editores (vscode, etc)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Arquivos de cobertura de teste
+coverage/
+
+# Pasta temporária do nodemon
+nodemon-debug.log
+
+# Outros arquivos temporários ou sensíveis que você não quer versionar
