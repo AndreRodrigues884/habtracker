@@ -8,6 +8,41 @@ const { grantDailyLoginXp } = require('../services/userXp.services');
 require('dotenv').config();
 
 
+const refreshToken = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Token não fornecido" });
+  }
+
+  const oldToken = authHeader.split(" ")[1];
+
+  try {
+    // Decodifica sem verificar expiração
+    const decoded = jwt.verify(oldToken, process.env.JWT_SECRET, { ignoreExpiration: true });
+
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(401).json({ message: "Usuário não encontrado" });
+
+    // Gera novo token
+    const newToken = jwt.sign(
+      { userId: user._id, type: user.type },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_SECRET_EXPIRES_IN }
+    );
+
+    // Retorna token renovado (pode retornar mais info se quiser)
+    return res.status(200).json({
+      id: user._id,
+      token: newToken,
+      xpGrantedToday: user.xp,
+      currentXp: user.xp,
+      level: user.level,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({ message: "Token inválido" });
+  }
+};
   const register = async (req, res) => {
     try {
       const { name, email, password } = req.body;
@@ -171,5 +206,6 @@ const completeHabit = async (req, res) => {
     login,
     register,
     getUserHabits,
-    completeHabit
+    completeHabit,
+    refreshToken
   };

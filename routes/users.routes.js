@@ -4,6 +4,7 @@ const usersController = require('../controllers/users.controllers');
 const auth = require('../middlewares/auth');
 
 
+router.post('/refresh', usersController.refreshToken);
 router.post('/register', usersController.register);
 router.post('/login', usersController.login);
 router.get('/habits', auth, usersController.getUserHabits);
